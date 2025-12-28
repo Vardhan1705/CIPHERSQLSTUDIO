@@ -1,0 +1,19 @@
+# Node
+node_modules/
+*.log
+
+# env files
+.env
+backend/.env
+frontend/.env
+
+# build
+frontend/build/
+
+# misc
+.DS_Store
+.vscode/
+.idea/
+
+# Docker
+docker-compose.override.yml

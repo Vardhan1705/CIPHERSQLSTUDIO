@@ -1,0 +1,47 @@
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == mobile {
+    @media (min-width: $breakpoint-mobile) { @content; }
+  }
+  @else if $breakpoint == tablet {
+    @media (min-width: $breakpoint-tablet) { @content; }
+  }
+  @else if $breakpoint == desktop {
+    @media (min-width: $breakpoint-desktop) { @content; }
+  }
+  @else if $breakpoint == large-desktop {
+    @media (min-width: $breakpoint-large-desktop) { @content; }
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin card {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid $border-color;
+}
+
+@mixin button-base {
+  padding: $spacing-sm $spacing-lg;
+  border: none;
+  border-radius: $border-radius-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: $font-size-sm;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
