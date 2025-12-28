@@ -124,45 +124,168 @@ Key files & folders:
 
 ## DFD Diagrams (Context level & Level 1) 🗺️
 
-Mermaid (README-friendly). If your GitHub supports Mermaid, paste these blocks directly into README.
+DFD – Level-0 (Context Diagram)
 
-Context-level (DFD Level 0):
-```mermaid
-flowchart TB
-  A[User (Browser)] -->|HTTP| B[Frontend (React)]
-  B -->|REST API (POST/GET)| C[Backend API (Node.js)]
-  C -->|Optionally| D[(PostgreSQL)]
-  C -->|Optionally| E[(MongoDB)]
-  C -->|Optionally| F[OpenAI]
-```
+Purpose: Shows the system as a single process and its interaction with external entities.
 
-Level 1 (data flows & processes):
-```mermaid
-flowchart LR
-  subgraph Frontend
-    U[User] --> UI[Attempt UI / Editor]
-    UI -->|query| API[Calls /api/execute]
-  end
-  API -->|validate| P[Query Validator]
-  P -->|mock execute| DBmock[(Mocked dataset)]
-  P -->|store attempt| Mongo[(MongoDB) - User/Attempt records)]
-  P -->|audit / hints| OpenAI[(OpenAI) - optional)]
-  API -->|response| UI
-```
+Entities & Flows
 
-Alternate: Graphviz DOT (save as `.dot` and render to PNG/SVG):
-```dot
-digraph DFD {
-  rankdir=LR;
-  User -> Frontend [label="HTTP"];
-  Frontend -> Backend [label="REST API"];
-  Backend -> PostgreSQL [label="optional: sandbox"];
-  Backend -> MongoDB [label="store attempts"];
-  Backend -> OpenAI [label="optional hints"];
-}
-```
+Student (User)
 
----
+Provides: registration details, login credentials, SQL queries, profile actions
+
+Receives: account confirmation, validation results, query results, hints, progress data
+
+CipherSQLStudio System
+
+Interacts with: User Database & Assignment Database
+
+Text Diagram (Level-0)
+
+          ┌───────────────┐
+          │    Student    │
+          └──────┬────────┘
+                 │ Inputs:
+                 │ Registration, Login, Query, Profile Requests
+                 │
+          ┌──────▼───────────────────────┐
+          │       CipherSQLStudio        │
+          │  (Practice & Learning App)   │
+          └──────┬───────────────┬───────┘
+                 │               │
+        User Data│               │Assignment Data
+        ┌────────▼───┐     ┌─────▼─────────┐
+        │ User DB    │     │ Assignment DB │
+        └────────────┘     └───────────────┘
+
+
+DFD – Level-1 (Expanded System Processes)
+
+Here we break the system into functional modules.
+
+Main Processes
+
+1️⃣ User Registration & Login
+2️⃣ Assignment Selection & Practice
+3️⃣ SQL Query Processing & Validation
+4️⃣ Progress Tracking & Profile Management
+
+Student
+  │
+  │ 1. Registration / Login Data
+  ▼
+┌─────────────────────────────┐
+│ 1. User Authentication       │
+└──────────┬──────────────────┘
+           │ Stores / Reads
+           ▼
+      ┌─────────────┐
+      │  User DB    │
+      └─────┬───────┘
+            │ Success/Failure
+            ▼
+         Student
+
+────────────────────────────────────────
+
+Student
+  │
+  │ 2. Select Level / Assignment
+  ▼
+┌─────────────────────────────┐
+│ 2. Assignment Selection     │
+└──────────┬──────────────────┘
+           │ Reads Assignment Data
+           ▼
+      ┌──────────────┐
+      │ Assignment DB│
+      └──────────────┘
+           │
+           ▼
+        Assignment Details → Student
+
+────────────────────────────────────────
+
+Student enters SQL Query
+  │
+  ▼
+┌─────────────────────────────┐
+│ 3. Query Processing Engine   │
+│ - Parses query               │
+│ - Executes test cases        │
+│ - Returns result / error     │
+└──────────┬──────────────────┘
+           │
+           ▼
+        Query Result / Hints → Student
+
+────────────────────────────────────────
+
+Student checks profile / progress
+  │
+  ▼
+┌─────────────────────────────┐
+│ 4. Progress Tracking Module  │
+│ - Stores attempts            │
+│ - Updates completion stats   │
+└──────────┬──────────────────┘
+           │
+           ▼
+      User DB (Progress Data)
+           │
+           ▼
+     Progress Report → Student
+
+
+DFD – Level-2 (Optional — Query Processing)
+
+(Useful if your report requires deeper detailing)
+
+Sub-Processes
+
+Validate SQL Syntax
+
+Validate Table / Columns
+
+Run Test Dataset
+
+Compare with Expected Output
+
+Show Result or Hint
+
+Student Query
+   │
+   ▼
+[3.1 Syntax Check] → Error? → Return Hint
+   │
+   ▼
+[3.2 Schema Validation] → Error? → Return Hint
+   │
+   ▼
+[3.3 Execute on Sample DB]
+   │
+   ▼
+[3.4 Compare Expected Output]
+   │
+   ├── Correct → Show Success + Update Progress
+   └── Wrong   → Show Error + Provide Hint
+
+
+📝 Processes Identified (for documentation)
+
+P1 – User Registration & Login
+
+P2 – Assignment Selection
+
+P3 – SQL Query Execution & Validation
+
+P4 – Hint Generation & Error Feedback
+
+P5 – Progress Tracking & Profile Management
+
+D1 – User Database
+
+D2 – Assignment / Testcase Database
 
 ## Notes & troubleshooting 🛠️
 - The server is intentionally a mock (safe, SELECT-only). Search for `Only SELECT queries are allowed` in `backend/server.js` to see security checks.
